@@ -1,8 +1,14 @@
-﻿#define  TOOLS_VER   "V0.1"
+﻿#define  TOOLS_VER   "V0.2"
+
+//*****************************************
+// CCG5 PD FW Update Tool Version : 0.2
+// 1. Add CCG5 FW Version Read Function
+//*****************************************
+
 
 //*****************************************
 // CCG5 PD FW Update Tool Version : 0.1
-// 1. Add eFlash Debug config file creat and modify
+// 1. Add CCG5 FW Update Function
 //*****************************************
 
 /* Copyright (C)Copyright 2005-2020 ZXQ Telecom. All rights reserved.
@@ -427,7 +433,7 @@ void ClearToolCursor()
 
 //=======================================Tool info==================================================
 #define  TOOLS_NAME  "CCG5 FW Update"
-#define  ITE_IC      "ITE5571"
+#define  ITE_IC      "CYPD5126"
 #define  CopyRight   "(C)Copyright 2005-2020 ZXQ Telecom."
 #define  TOOLS_AUTHOR "Morgen(zxqchongchi@gmail.com)"
 #define  DEBUG       0
@@ -1006,14 +1012,18 @@ void Update_PD_FW(void)
             row_l = 0;
             row_h++;
         }
-
+        
+        #if (!DEBUG)
         if(0==(i%5))
         {
             printf("@");
             printf("[%02d%%]\b\b\b\b\b", ((i*100)/FW_Size));
         }
+        #endif
     }
+    #if (!DEBUG)
     printf("[%02d%%]\b\b\b\b\b", 100);
+    #endif
     
     //Validate FW
     if(Validate_FW())
@@ -1059,7 +1069,6 @@ BYTE Read_PDFW_ToBuffer(char *FileName)
     while (!feof(pPDFW_File))
     {
         len1=fread(FW_Data[FW_Size], 1, 0x100, pPDFW_File);
-        //printf("Read PD FW File, FWSize=[%#X]K, ReadSize=[%#X]\n",FW_Size,len1);
 
         #if DEBUG
         for(i=0; i<256; i++)
@@ -1087,18 +1096,77 @@ BYTE Read_PDFW_ToBuffer(char *FileName)
     return(TRUE);
 }
 
+BYTE Read_FW_Ver(void)
+{
+    BYTE WaitCount=0;
+    BYTE PD_Cmd_TryCount=0;
+    BYTE Ver_Byte1=0;
+    BYTE Ver_Byte2=0;
+    BYTE Ver_Byte3=0;
+    BYTE Ver_Byte4=0;
+    BYTE Ver_Byte5=0;
+    BYTE Ver_Byte6=0;
+    BYTE Ver_Byte7=0;
+    BYTE Ver_Byte8=0;
+    
+Read_FW_Ver_Setp1:
+    PD_Cmd_TryCount++;
+    
+    // Control EC I2C read (FW2_VERSION)0x0020 PD Reg, to read FW2 version
+    EC_RAM_WRITE(PD_RegAddr01_RAM, 0x20);
+    EC_RAM_WRITE(PD_RegAddr02_RAM, 0x00);            // PD Reg is 0x0020
+    EC_RAM_WRITE(PD_I2C_Count_RAM, 0x08);            // Read I2C data lenth is 8
+    EC_RAM_WRITE(PD_I2C_Start_RAM, PD_I2C_Read);     // Start EC I2C function
+    
+    while(1)
+    {
+        _sleep(50);   // millisecond
+        if(PD_I2C_RW_OK == EC_RAM_READ(PD_I2C_Status_RAM))
+        {
+            WaitCount=0;
+            PD_Cmd_TryCount=0;
+            break;
+        }
+        
+        WaitCount++;
+        if(WaitCount>3)
+        {
+            if(PD_Cmd_TryCount>3)
+            {
+                printf("Read FW2 Version Fail.WaitCount=[%d], TryCount=[%d]\n",WaitCount, PD_Cmd_TryCount);
+                return 1;
+            }
+            goto Read_FW_Ver_Setp1;
+        }
+    }
+    
+    Ver_Byte1 = EC_RAM_READ(PD_SMB_DATA_RAM);
+    Ver_Byte2 = EC_RAM_READ(PD_SMB_DATA_RAM+1);
+    Ver_Byte3 = EC_RAM_READ(PD_SMB_DATA_RAM+2);
+    Ver_Byte4 = EC_RAM_READ(PD_SMB_DATA_RAM+3);
+    Ver_Byte5 = EC_RAM_READ(PD_SMB_DATA_RAM+4);
+    Ver_Byte6 = EC_RAM_READ(PD_SMB_DATA_RAM+5);
+    Ver_Byte7 = EC_RAM_READ(PD_SMB_DATA_RAM+6);
+    Ver_Byte8 = EC_RAM_READ(PD_SMB_DATA_RAM+7);
+    
+    printf("PD_FW_Ver: %02X%02X%02X%02X%02X%02X%02X%02X", 
+                       Ver_Byte1,Ver_Byte2,Ver_Byte3,Ver_Byte4,Ver_Byte5,Ver_Byte6,Ver_Byte7,Ver_Byte8);
+    
+    return 0;
+}
+
 
 void help(void)
 {
     printf("============================================================\n");
-    printf("=         CCG5 PD FW Update Utility Version : %s         =\n",TOOLS_VER);
+    printf("=         %s FW Update Utility Version : %s        =\n",ITE_IC,TOOLS_VER);
     printf("=        %s            =\n",CopyRight);
     printf("=                 All Rights Reserved.                     =\n");
     printf("=                             --%s                =\n", __DATE__);
     printf("=                                                          =\n");
-    printf("=      [/R_FW]  Read Current PD FW binary                  =\n");
-    printf("=      [/R_VER] Read Current PD FW Version                 =\n");
-    printf("=      [/W_FW]  Update PD FW                               =\n");
+    printf("=      [/R_FW]            Read Current PD FW binary        =\n");
+    printf("=      [/R_VER]           Read Current PD FW Version       =\n");
+    printf("=      [/W_FW  PDFW.bin]  Update PD FW                     =\n");
     printf("============================================================\n");
 }
 
@@ -1128,9 +1196,13 @@ UINT16 main(UINT16 argc, char *argv[])
     
     system("cls");
     
-    printf("=======================================================\n");
-    printf("=         CCG5 PD FW Update Utility Version : %s    =\n",TOOLS_VER);
-    printf("=======================================================\n");
+    printf("============================================================\n");
+    printf("=         %s FW Update Utility Version : %s        =\n",ITE_IC,TOOLS_VER);
+    printf("=        %s            =\n",CopyRight);
+    printf("=                 All Rights Reserved.                     =\n");
+    printf("=                             --%s                =\n", __DATE__);
+    printf("=                                                          =\n");
+    printf("============================================================\n");
     
     // Init IO port
     IOInitOK = InitializeWinIo();
@@ -1154,6 +1226,10 @@ UINT16 main(UINT16 argc, char *argv[])
         {
             Update_PD_FW();
         }
+    }
+    else if(2==PD_Action)
+    {
+        Read_FW_Ver();
     }
     else
     {
