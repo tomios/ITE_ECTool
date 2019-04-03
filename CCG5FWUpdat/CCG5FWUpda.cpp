@@ -1,4 +1,12 @@
-﻿#define  TOOLS_VER   "V0.2"
+﻿#define  TOOLS_VER   "V0.3"
+
+
+//*****************************************
+// CCG5 PD FW Update Tool Version : 0.3
+// 1. Notify EC, it will start update PD FW
+//    66port command, 0x56 to disable EC access PD
+//    66port command, 0x57 to enable EC access PD
+//*****************************************
 
 //*****************************************
 // CCG5 PD FW Update Tool Version : 0.2
@@ -1175,6 +1183,7 @@ UINT16 main(UINT16 argc, char *argv[])
 {
     BYTE IOInitOK=0;
     BYTE PD_Action=0;
+    BYTE PD_Update_Flag=0;
     
     if (argc == 1)
     {
@@ -1220,6 +1229,8 @@ UINT16 main(UINT16 argc, char *argv[])
 
     SetTextColor(EFI_WHITE, EFI_BLACK);
     
+    Send_cmd_by_PM(0x56);  //EC must stop PD register access after receive this command
+    
     if(3==PD_Action)
     {
         if(TRUE == Read_PDFW_ToBuffer(argv[2]))
@@ -1235,6 +1246,8 @@ UINT16 main(UINT16 argc, char *argv[])
     {
         printf("Not support\n");
     }
+    
+    Send_cmd_by_PM(0x57);  //EC can access PD register after receive this command
     
     
     goto end;
