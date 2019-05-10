@@ -1,4 +1,9 @@
-#define  TOOLS_VER   "V1.8"
+#define  TOOLS_VER   "V1.9"
+//*****************************************
+// BatteryTool Version : 1.9
+//*****************************************
+// 1. Add USB-C PD status
+
 //*****************************************
 // BatteryTool Version : 1.8
 //*****************************************
@@ -539,9 +544,12 @@ typedef enum InfoNameEnum
     ChargerStatus,
     INPUT_Current,
     
+    Adapter_WATT,
     USB_C_PDO_WATT,
     USB_C_PDO_C,
     USB_C_PDO_V,
+    USB_C_Status,
+    USB_C_Status2,
     
     BAT_ManuName,
     BAT_DeviceName,
@@ -621,8 +629,11 @@ EC_BatteryInfo BAT1_Info[] =
     {"INPUT_Current       :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     
     {"Adapter_watt        :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
+    {"USB_C_Watt          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"USB_C_PDO_C         :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"USB_C_PDO_V         :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
+    {"USB_C_Status        :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
+    {"USB_C_Status2       :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
 
     {"BAT_ManuName        :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"BAT_DeviceName      :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
@@ -1251,7 +1262,7 @@ void PollBatteryInfo(void)
     {
         tmpvalue = EC_RAM_READ(BAT1_Info[BAT_Status_H].InfoAddr_L);
         BAT1_Info[BAT_Status_H].InfoInt = tmpvalue;
-        sprintf(BAT1_Info[BAT_Status_H].InfoValue, "%-#02X", tmpvalue);
+        sprintf(BAT1_Info[BAT_Status_H].InfoValue, "%-#08X", tmpvalue);
         //sprintf(BAT1_Info[BAT_Status_H].InfoValue, "OCA:%d | TCA:%d | RS | OTA:%d | TDA:%d | RS | RCA:%d | RTA:%d",
         //                                          (tmpvalue&0x8000)?1:0, (tmpvalue&0x4000)?1:0,
         //                                          (tmpvalue&0x1000)?1:0, (tmpvalue&0x0800)?1:0, 
@@ -1262,7 +1273,7 @@ void PollBatteryInfo(void)
     
         tmpvalue = EC_RAM_READ(BAT1_Info[BAT_Status_L].InfoAddr_L);
         BAT1_Info[BAT_Status_L].InfoInt = tmpvalue;
-        sprintf(BAT1_Info[BAT_Status_L].InfoValue, "%-#02X", tmpvalue);
+        sprintf(BAT1_Info[BAT_Status_L].InfoValue, "%-#08X", tmpvalue);
         //sprintf(BAT1_Info[BAT_Status_L].InfoValue, "INI:%d | DSG:%d | FC :%d | FD :%d | EC:%02X   | [%#04X]",
         //                                          (tmpvalue&0x0080)?1:0, (tmpvalue&0x0040)?1:0,
         //                                          (tmpvalue&0x0020)?1:0, (tmpvalue&0x0010)?1:0,
@@ -1307,6 +1318,12 @@ void PollBatteryInfo(void)
         sprintf(BAT1_Info[Acer_BAT_RSOC].InfoValue, "%-8.2f %%", tmpvalue1);
         BAT1_Info[Acer_BAT_RSOC].InfoInt = (int)(tmpvalue1+0.5);
     }
+    if(BAT1_Info[Adapter_WATT].Active)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[Adapter_WATT].InfoAddr_L);
+        BAT1_Info[Adapter_WATT].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[Adapter_WATT].InfoValue, "%-8d W",BAT1_Info[Adapter_WATT].InfoInt);
+    }
     if(BAT1_Info[USB_C_PDO_WATT].Active)
     {
         tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_PDO_WATT].InfoAddr_L);
@@ -1326,6 +1343,55 @@ void PollBatteryInfo(void)
                 | EC_RAM_READ(BAT1_Info[USB_C_PDO_V].InfoAddr_L);
         BAT1_Info[USB_C_PDO_V].InfoInt = tmpvalue/10;
         sprintf(BAT1_Info[USB_C_PDO_V].InfoValue, "%-8d V",BAT1_Info[USB_C_PDO_V].InfoInt);
+    }
+    if(BAT1_Info[USB_C_Status].Active)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_Status].InfoAddr_L);
+        BAT1_Info[USB_C_Status].InfoInt = tmpvalue;
+        //sprintf(BAT1_Info[USB_C_Status].InfoValue, "%-#08X",BAT1_Info[USB_C_Status].InfoInt);
+        if(tmpvalue&0x01)
+        {
+            sprintf(BAT1_Info[USB_C_Status].InfoValue, "[%-s][%-s][%-s][%-s][%-s][%-s]",
+                                    (tmpvalue&0x01)?"Connect   ":"Connect   ",
+                                    (tmpvalue&0x02)?"cc1":((tmpvalue&0x04)?"cc2":"   "),
+                                    (tmpvalue&0x08)?"DFP":"UFP",
+                                    (tmpvalue&0x10)?"Source":"Sink  ",
+                                    (tmpvalue&0x20)?"Watt_Low":"Watt_Hi ",
+                                    (tmpvalue&0x40)?"PDO_OK":"      "
+                                    );
+        }
+        else
+        {
+            sprintf(BAT1_Info[USB_C_Status].InfoValue, "[%-s][%-s][%-s][%-s][%-s][%-s]",
+                                    "Disconnect",
+                                    "   ",
+                                    "   ",
+                                    "      ",
+                                    "        ",
+                                    "      "
+                                    );
+        }
+    }
+    if(BAT1_Info[USB_C_Status2].Active)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_Status2].InfoAddr_L);
+        BAT1_Info[USB_C_Status2].InfoInt = tmpvalue;
+        if(tmpvalue&0x01)
+        {
+            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "DC_ADP   ");
+        }
+        else if(tmpvalue&0x02)
+        {
+            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "PD_ADP   ");
+        }
+        else if(tmpvalue&0x04)
+        {
+            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "TYPEC_ADP");
+        }
+        else
+        {
+            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "         ");
+        }
     }
 #endif 
 }

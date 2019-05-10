@@ -1,0 +1,84 @@
+# This file is used by the python scripts and should not be modified. The scripts expect the exact format being used and any change will break the scripts.
+# Every time a device is added without any effect to the scripts, the patch version should get incremented. Every time a change is made that can potentially
+# affect the scripts, the minor version should be incremented. The major number is not expected to be changed unless a major change is planned. The first
+# entry is the major number, second is minor and third is patch
+part_list_version = \
+       {'major_version': 1, 'minor_version': 2, 'patch_version': 5}
+part_list = [
+        {'family':'CCG1',  'part_number':'CYPD1103-35FNXI','format':0x00,'sid':0x04901193,'srev':0x11,'checksum_type':0x00,'offset':0x2900,'offset1':0x2900, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1104-35FNXI','format':0x00,'sid':0x04931193,'srev':0x11,'checksum_type':0x00,'offset':0x2900,'offset1':0x2900, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1105-35FNXI','format':0x00,'sid':0x04941193,'srev':0x11,'checksum_type':0x00,'offset':0x2A00,'offset1':0x2A00, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1120-35FNXI','format':0x00,'sid':0x04921193,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x1100, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1120-40LQXI','format':0x00,'sid':0x04881193,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x1100, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1121-40LQXI','format':0x00,'sid':0x04891193,'srev':0x11,'checksum_type':0x00,'offset':0x0F00,'offset1':0x0F00, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1122-40LQXI','format':0x00,'sid':0x048A1193,'srev':0x11,'checksum_type':0x00,'offset':0x0F00,'offset1':0x0F00, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1131-35FNXI','format':0x00,'sid':0x04911193,'srev':0x11,'checksum_type':0x00,'offset':0x0F00,'offset1':0x0F00, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1132-16SXI' ,'format':0x00,'sid':0x04981193,'srev':0x11,'checksum_type':0x00,'offset':0x3000,'offset1':0x3000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG1',  'part_number':'CYPD1134-40LQXI','format':0x00,'sid':0x048b1193,'srev':0x11,'checksum_type':0x00,'offset':0x0F00,'offset1':0x0F00, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+
+        {'family':'CCG2',  'part_number':'CYPD2103-20FNXI','format':0x00,'sid':0x140011A4,'srev':0x11,'checksum_type':0x00,'offset':0x1800,'offset1':0x1800, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2103-14LHXI','format':0x00,'sid':0x140311A4,'srev':0x11,'checksum_type':0x00,'offset':0x1800,'offset1':0x1800, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2104-20FNXI','format':0x00,'sid':0x140111A4,'srev':0x11,'checksum_type':0x00,'offset':0x1800,'offset1':0x1800, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2105-20FNXI','format':0x00,'sid':0x140211A4,'srev':0x11,'checksum_type':0x00,'offset':0x1800,'offset1':0x1800, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2122-24LQXI','format':0x00,'sid':0x140411A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2122-20FNXI','format':0x00,'sid':0x140612A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2134-24LQXI','format':0x00,'sid':0x140511A4,'srev':0x11,'checksum_type':0x00,'offset':0x3000,'offset1':0x3000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2120-24LQXI','format':0x00,'sid':0x141213A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2119-24LQXI','format':0x00,'sid':0x140913A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2123-24LQXI','format':0x00,'sid':0x140711A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2124-24LQXI','format':0x00,'sid':0x140811A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2121-24LQXI','format':0x00,'sid':0x141011A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+        {'family':'CCG2',  'part_number':'CYPD2125-24LQXI','format':0x00,'sid':0x141111A4,'srev':0x11,'checksum_type':0x00,'offset':0x1000,'offset1':0x1000, 'row_size':0x80, 'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000},
+
+        {'family':'CCG3',  'part_number':'CYPD3120-40LQXI','format':0x01,'sid':0x1D0011AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80, 'table_size':0x800,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3105-42FNXI','format':0x01,'sid':0x1D0111AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3121-40LQXI','format':0x01,'sid':0x1D0211AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3122-40LQXI','format':0x01,'sid':0x1D0311AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3125-40LQXI','format':0x01,'sid':0x1D0411AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10B80,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3135-40LQXI','format':0x01,'sid':0x1D0511AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3135-16SXQ' ,'format':0x01,'sid':0x1D0611AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3126-42FNXI','format':0x01,'sid':0x1D0711AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10B80,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3',  'part_number':'CYPD3123-40LQXI','format':0x01,'sid':0x1D0911AD,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10C00,'row_size':0x80, 'table_size':0x800,'resp_offset':0x200,'flash_size':0x20000},
+
+        {'family':'CCG4',  'part_number':'CYPD4225-40LQXI','format':0x01,'sid':0x180011A8,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4125-40LQXI','format':0x01,'sid':0x180111A8,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4235-40LQXI','format':0x01,'sid':0x180211A8,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4135-40LQXI','format':0x01,'sid':0x180311A8,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4226-40LQXI','format':0x01,'sid':0x1F0011AF,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10A00,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4126-40LQXI','format':0x01,'sid':0x1F0111AF,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10A00,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4126-24LQXI','format':0x01,'sid':0x1F0411AF,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10A00,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4236-40LQXI','format':0x01,'sid':0x1F0211AF,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4136-40LQXI','format':0x01,'sid':0x1F0311AF,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG4',  'part_number':'CYPD4136-24LQXI','format':0x01,'sid':0x1F0511AF,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        
+        {'family':'CCG3PA','part_number':'CYPD3174-24LQXQ','format':0x01,'sid':0x200011B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+        {'family':'CCG3PA','part_number':'CYPD3174-16SXQ', 'format':0x01,'sid':0x200111B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+        {'family':'CCG3PA','part_number':'CYPD3175-24LQXQ','format':0x01,'sid':0x200211B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+        {'family':'CCG3PA','part_number':'CYPD3171-24LQXQ','format':0x01,'sid':0x200311B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+        {'family':'CCG3PA','part_number':'CYPD3195-24LQXS','format':0x01,'sid':0x200511B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+        {'family':'CCG3PA','part_number':'CYPD3196-24LQXS','format':0x01,'sid':0x200611B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+        {'family':'CCG3PA','part_number':'CYPD3197-24LQXS','format':0x01,'sid':0x200711B0,'srev':0x11,'checksum_type':0x00,'offset':0x1100,'offset1':0x01100,'row_size':0x80, 'table_size':0x400,'resp_offset':0x200,'flash_size':0x10000},
+
+        {'family':'CCG3PA2','part_number':'CYPDC1185-32LQXQ','format':0x01,'sid':0x240011B4,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3PA2','part_number':'CYPDC1186-30FNXI','format':0x01,'sid':0x240111B4,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG3PA2','part_number':'CYPDC1186B2-30FNXI','format':0x01,'sid':0x240211B4,'srev':0x11,'checksum_type':0x00,'offset':0x1900,'offset1':0x10100,'row_size':0x80,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        
+        {'family':'CCG5',  'part_number':'CYPD5225-96BZXI','format':0x01,'sid':0x210011B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG5',  'part_number':'CYPD5125-40LQXI','format':0x01,'sid':0x210111B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG5',  'part_number':'CYPD5235-96BZXI','format':0x01,'sid':0x210211B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG5',  'part_number':'CYPD5236-96BZXI','format':0x01,'sid':0x210311B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG5',  'part_number':'CYPD5237-96BZXI','format':0x01,'sid':0x210411B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG5',  'part_number':'CYPD5227-96BZXI','format':0x01,'sid':0x210511B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG5',  'part_number':'CYPD5135-40LQXI','format':0x01,'sid':0x210611B1,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        
+        {'family':'CCG6',  'part_number':'CYPD6125-40LQXI','format':0x01,'sid':0x2A0011BA,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG6',  'part_number':'CYPD6126-96BZXI','format':0x01,'sid':0x2A1011BA,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG6',  'part_number':'CYPD5126-40LQXI','format':0x01,'sid':0x2A0111BA,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG6',  'part_number':'CYPD5137-40LQXI','format':0x01,'sid':0x2A0211BA,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000},
+        {'family':'CCG6',  'part_number':'CYPD6137-40LQXI','format':0x01,'sid':0x2A0311BA,'srev':0x11,'checksum_type':0x00,'offset':0x1500,'offset1':0x10100,'row_size':0x100,'table_size':0x400,'resp_offset':0x200,'flash_size':0x20000}]
+
+unknown_part = \
+        {'family':'UNKNOWN','part_number':'UNKNOWN','format':0x00,'sid':0x00000000,'srev':0x00,'checksum_type':0x00,'offset':0x1800,'offset1':0x1800,'row_size':0x80,'table_size':0x200,'resp_offset':0x120,'flash_size':0x8000}
+
+    #...
+

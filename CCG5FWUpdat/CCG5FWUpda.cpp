@@ -562,7 +562,6 @@ BYTE Read_FW2_Location(void)
     #endif
     
     return 0;
-    
 }
 
 BYTE TypeC_Port_Disable(void)
@@ -699,7 +698,7 @@ FW1_Act_Setp1:
     }
     else
     {
-        printf("Check Current FW1 action Fail.WaitCount=[%d], TryCount=[%d]\n",WaitCount, PD_Cmd_TryCount);
+        printf("Current action is  FW1\n");
         printf("Current Device mode is [%#X]\n", Device_Mode);
         return 1;
     }
@@ -970,29 +969,36 @@ void Update_PD_FW(void)
     #endif
     printf("Disable Type_C Port Pass\n");
     
-    #if 1
-    // Change to FW1
-    if(Jump_ALT_FW())
-    {
-        return;
-    }
-    _sleep(1000);   // millisecond
-    #if DEBUG
-    system("pause");
-    #endif
-    #endif
-    printf("Jump FW1 Pass\n");
-    
-    // Check jump to FW1
     if(Check_FW1_Activity())
     {
-        return;
+        // Change to FW1
+        if(Jump_ALT_FW())
+        {
+            return;
+        }
+        _sleep(1000);   // millisecond
+        #if DEBUG
+        system("pause");
+        #endif
+        printf("Jump FW1 Pass\n");
+        
+        // Check jump to FW1
+        if(Check_FW1_Activity())
+        {
+            return;
+        }
+        _sleep(1000);   // millisecond
+        #if DEBUG
+        system("pause");
+        #endif
+        printf("Current action FW is FW1\n");
     }
-    _sleep(1000);   // millisecond
-    #if DEBUG
-    system("pause");
-    #endif
-    printf("Current action FW is FW1\n");
+    else
+    {
+        printf("Current action FW1, Set FW2 address is 0xC000");
+        FW2_Addr_H = 0xC0;
+        FW2_Addr_L = 0x00;
+    }
     
     // Enter Flash Mode
     if(Enter_Flash_Mode())
@@ -1007,7 +1013,7 @@ void Update_PD_FW(void)
     
     row_h = 0;
     row_l = FW2_Addr_H;
-    printf("[................................................................]\r[");
+    printf("[......................................................................]\r[");
     for(i=0; i<FW_Size; i++)
     {
         if(Write_256Byte(i, row_h, row_l))
