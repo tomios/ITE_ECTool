@@ -1,5 +1,9 @@
-﻿#define  TOOLS_VER   "V0.3"
+﻿#define  TOOLS_VER   "V0.4"
 
+//*****************************************
+// CCG5 PD FW Update Tool Version : 0.4
+// 1. Optimize upgrade speed
+//*****************************************
 
 //*****************************************
 // CCG5 PD FW Update Tool Version : 0.3
@@ -475,7 +479,7 @@ BYTE Clear_Device_INT(void)
     EC_RAM_WRITE(PD_I2C_Count_RAM, 0x02);            // Read I2C data lenth is 2
     EC_RAM_WRITE(PD_I2C_Start_RAM, PD_I2C_Read);     // Start EC I2C function
     
-    _sleep(50);   // millisecond
+    _sleep(20);   // millisecond
     
     // Control EC I2C write (INTR_REG)0x0006 PD Reg
     EC_RAM_WRITE(PD_SMB_DATA_RAM, 0x06);
@@ -483,7 +487,7 @@ BYTE Clear_Device_INT(void)
     EC_RAM_WRITE((PD_SMB_DATA_RAM+2), 0x01);          // Data
     EC_RAM_WRITE(PD_I2C_Count_RAM, 0x03);             // Write I2C data lenth is 3
     EC_RAM_WRITE(PD_I2C_Start_RAM, PD_I2C_Write);     // Start EC I2C function
-    _sleep(50);   // millisecond
+    _sleep(20);   // millisecond
     
     return 0;
 }
@@ -506,7 +510,7 @@ Check_Device_Re_Setp1:
     
     while(1)
     {
-        _sleep(50);   // millisecond
+        _sleep(20);   // millisecond
         if(PD_I2C_RW_OK == EC_RAM_READ(PD_I2C_Status_RAM))
         {
             WaitCount=0;
@@ -580,7 +584,7 @@ Disable_TypeC_Setp1:
     
     while(1)
     {
-        _sleep(50);   // millisecond
+        _sleep(20);   // millisecond
         if(PD_I2C_RW_OK == EC_RAM_READ(PD_I2C_Status_RAM))
         {
             WaitCount=0;
@@ -624,7 +628,7 @@ Jump_ALT_Setp1:
     
     while(1)
     {
-        _sleep(50);   // millisecond
+        _sleep(20);   // millisecond
         if(PD_I2C_RW_OK == EC_RAM_READ(PD_I2C_Status_RAM))
         {
             WaitCount=0;
@@ -696,9 +700,15 @@ FW1_Act_Setp1:
         #endif
         return 0;
     }
+    else if(0x02 == (Device_Mode&0x03))
+    {
+        printf("Current action is  FW2\n");
+        printf("Current Device mode is [%#X]\n", Device_Mode);
+        return 1;
+    }
     else
     {
-        printf("Current action is  FW1\n");
+        printf("Current action is  Boot Mode\n");
         printf("Current Device mode is [%#X]\n", Device_Mode);
         return 1;
     }
@@ -791,12 +801,12 @@ BYTE Write_256Byte(UINT16 PageNum, BYTE ROW_H, BYTE ROW_L)
         EC_RAM_WRITE((PD_SMB_DATA_RAM+1), 0x02);        // Addr is 0200
         EC_RAM_WRITE(PD_I2C_Count_RAM, 34);             // Write I2C data lenth is 34
         EC_RAM_WRITE(PD_I2C_Start_RAM, PD_I2C_Write);   // Start EC I2C function
-        _sleep(50);   // millisecond
+        _sleep(15);   // millisecond
     }
     #if DEBUG
     printf("\n");
     #endif
-    
+    _sleep(20);   // millisecond
     // Control EC I2C write 0x46 to (FLASH_ROW_READ_WRITE)0x000C PD Reg, trigger to flash
     EC_RAM_WRITE(PD_SMB_DATA_RAM, 0x0C);
     EC_RAM_WRITE((PD_SMB_DATA_RAM+1), 0x00);          // PD Reg is 0x000C
@@ -808,7 +818,7 @@ BYTE Write_256Byte(UINT16 PageNum, BYTE ROW_H, BYTE ROW_L)
     EC_RAM_WRITE(PD_I2C_Count_RAM, 0x06);             // Write I2C data lenth is 6
     EC_RAM_WRITE(PD_I2C_Start_RAM, PD_I2C_Write);     // Start EC I2C function
     
-    _sleep(50);   // millisecond
+    _sleep(60);   // millisecond
     
     #if DEBUG
     printf("Write ROW is [%#X][%#X]\n", ROW_H, ROW_L);
@@ -995,7 +1005,7 @@ void Update_PD_FW(void)
     }
     else
     {
-        printf("Current action FW1, Set FW2 address is 0xC000");
+        printf("Current action FW1, Set FW2 address is 0xC000\n");
         FW2_Addr_H = 0xC0;
         FW2_Addr_L = 0x00;
     }
@@ -1013,7 +1023,7 @@ void Update_PD_FW(void)
     
     row_h = 0;
     row_l = FW2_Addr_H;
-    printf("[......................................................................]\r[");
+    printf("[.....................................................................]\r[");
     for(i=0; i<FW_Size; i++)
     {
         if(Write_256Byte(i, row_h, row_l))
@@ -1108,6 +1118,97 @@ BYTE Read_PDFW_ToBuffer(char *FileName)
     fclose(debuglog);
     
     return(TRUE);
+}
+
+BYTE Read_Device_Mode(void)
+{
+    BYTE WaitCount=0;
+    BYTE PD_Cmd_TryCount=0;
+    BYTE Ver_Byte1=0;
+    
+Read_FW_Mode_Setp1:
+    PD_Cmd_TryCount++;
+    
+    // Control EC I2C read (DEVICE_MODE)0x0000 PD Reg
+    EC_RAM_WRITE(PD_RegAddr01_RAM, 0x00);
+    EC_RAM_WRITE(PD_RegAddr02_RAM, 0x00);            // PD Reg is 0x0020
+    EC_RAM_WRITE(PD_I2C_Count_RAM, 0x03);            // Read I2C data lenth is 3
+    EC_RAM_WRITE(PD_I2C_Start_RAM, PD_I2C_Read);     // Start EC I2C function
+    
+    while(1)
+    {
+        _sleep(50);   // millisecond
+        if(PD_I2C_RW_OK == EC_RAM_READ(PD_I2C_Status_RAM))
+        {
+            WaitCount=0;
+            PD_Cmd_TryCount=0;
+            break;
+        }
+        
+        WaitCount++;
+        if(WaitCount>3)
+        {
+            if(PD_Cmd_TryCount>3)
+            {
+                printf("Read FW Mode Fail.WaitCount=[%d], TryCount=[%d]\n",WaitCount, PD_Cmd_TryCount);
+                return 1;
+            }
+            goto Read_FW_Mode_Setp1;
+        }
+    }
+    
+    Ver_Byte1 = EC_RAM_READ(PD_SMB_DATA_RAM);
+    
+    printf("Device Mode: [%#X]", Ver_Byte1);
+    if(0x80==(Ver_Byte1&0x80))
+    {
+        printf("[HPIv2]");
+    }
+    else
+    {
+        printf("[HPIv1]");
+    }
+    
+    if(0==(Ver_Byte1&0x30))
+    {
+        printf("[128K]");
+    }
+    else if(0x10==(Ver_Byte1&0x30))
+    {
+        printf("[256K]");
+    }
+    else
+    {
+        printf("[Other]");
+    }
+    
+    if(0==(Ver_Byte1&0x0C))
+    {
+        printf("[1-Port]");
+    }
+    else if(0x04==(Ver_Byte1&0x0C))
+    {
+        printf("[2-Port]");
+    }
+    else
+    {
+        printf("[Other]");
+    }
+    
+    if(0==(Ver_Byte1&0x03))
+    {
+        printf("[BootMode]\n");
+    }
+    else if(1==(Ver_Byte1&0x03))
+    {
+        printf("[FW1]\n");
+    }
+    else
+    {
+        printf("[FW2]\n");
+    }
+
+    return 0;
 }
 
 BYTE Read_FW_Ver(void)
@@ -1246,6 +1347,7 @@ UINT16 main(UINT16 argc, char *argv[])
     }
     else if(2==PD_Action)
     {
+        Read_Device_Mode();
         Read_FW_Ver();
     }
     else

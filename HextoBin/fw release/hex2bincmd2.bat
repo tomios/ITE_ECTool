@@ -1,1 +1,0 @@
-c:\Python34\python.exe hex_bin_update.py -i CYPD5126-40LQXI_notebook_tbt.hex -o CYPD5126-40LQXI_notebook_tbt.bin
