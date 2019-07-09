@@ -61,7 +61,7 @@ EFI_FILE_PROTOCOL *BKFileHandle=0;
 
 /**************************TYPE define**************************************************/
 #define Version      "2.4"
-#define Vendor       "ZXQ"
+#define Vendor       "ITE"
 /**************************TYPE define end**********************************************/
 
 /**************************Variable define**********************************************/
@@ -72,8 +72,9 @@ UINT8 *str3;
 UINT8 *str4;
 
 UINT8  BackUp=0;     // Default is not backup
-UINT8  FW_Size=64;   // Default is 64K
+UINT8  FW_Size=128;  // Default is 128K
 UINT8  ResetFlag=0;  // Default is not reset
+UINT8  UpdateFlashFlag=0;  // Default is not reset
 
 FILE   *pECFile;
 FILE   *pBackFile;
@@ -452,76 +453,76 @@ void Flash_BackUp(void)
 // For ITE e-flash
 void Block_1K_Erase(UINT8 addr2,UINT8 addr1,UINT8 addr0)
 {
-	FlashStatusRegWriteEnable();
-	FlashWriteEnable();
+    FlashStatusRegWriteEnable();
+    FlashWriteEnable();
 
-	WaitFlashFree();
-	FollowMode(_EnterFollowMode);
-	SendCmdToFlash(SPICmd_1KSectorErase);
-	SendByteToFlash(addr2);
-	SendByteToFlash(addr1);
-	SendByteToFlash(addr0);
-	WaitFlashFree();
+    WaitFlashFree();
+    FollowMode(_EnterFollowMode);
+    SendCmdToFlash(SPICmd_1KSectorErase);
+    SendByteToFlash(addr2);
+    SendByteToFlash(addr1);
+    SendByteToFlash(addr0);
+    WaitFlashFree();
 }
 
 // For ITE 128K e-flash
 void ITE_eFlash_Erase(void)
 {
-	UINT16 i,j;
-	Print(L"   Eraseing...      : ");
-	
-	for(i=0; i<0x02; i++)           // 2*64K
-	{
-		for(j=0; j<0x100; j+=0x04)  // 64K
-		{
-			Block_1K_Erase((UINT8)i, (UINT8)j, 0x00);
-			if(0 == j%0x8)
-				Print(L"#");
-		}
-	}
-	
-	Print(L"   -- Erase OK. \n\n");
+    UINT16 i,j;
+    Print(L"   Eraseing...      : ");
+
+    for(i=0; i<0x02; i++)           // 2*64K
+    {
+        for(j=0; j<0x100; j+=0x04)  // 64K
+        {
+            Block_1K_Erase((UINT8)i, (UINT8)j, 0x00);
+            if(0 == j%0x8)
+                Print(L"#");
+        }
+    }
+
+    Print(L"   -- Erase OK. \n\n");
 }
 
 // For ITE 128K e-flash
 UINT8 ITE_eFlash_Erase_Verify(void)
 {
-	CHAR16 counter;
-	UINT8 Dat;
-	UINT8 i;
-	Print(L"   Erase Verify...  : ");
-	
-	FlashWriteDisable();
-	WaitFlashFree();
-	FollowMode(_EnterFollowMode);
-	SendCmdToFlash(SPICmd_FastRead);
-	SendByteToFlash(0x00);   // addr[24:15]
-	SendByteToFlash(0x00);   // addr[8:14]
-	SendByteToFlash(0x00);   // addr[0:7]
-	SendByteToFlash(0x00);   // fast read dummy byte
-	
-	for(i=0; i<4; i++)
-	{
-		for(counter=0x0000;counter<0x8000;counter++)  // 32K
-		{
-			Dat=ReadByteFromFlash();
-			if(Dat!=0xFF) //verify Byte is all 0xFF, otherwise  error
-			{
-				WaitFlashFree();
-				Print(L" Dat is: %d \n",Dat);
-				Print(L" Counter is: %d \n",counter);
-				Print(L" Block is: %d \n",i);
-				Print(L" -- Verify Fail. \n");
-				return(FALSE);
-			}
-			if(0 == counter%0x800)
-				Print(L"#");
-		}
-	}
-	
-	WaitFlashFree();
-	Print(L"   -- Verify OK. \n\n");
-	return(TRUE);
+    CHAR16 counter;
+    UINT8 Dat;
+    UINT8 i;
+    Print(L"   Erase Verify...  : ");
+
+    FlashWriteDisable();
+    WaitFlashFree();
+    FollowMode(_EnterFollowMode);
+    SendCmdToFlash(SPICmd_FastRead);
+    SendByteToFlash(0x00);   // addr[24:15]
+    SendByteToFlash(0x00);   // addr[8:14]
+    SendByteToFlash(0x00);   // addr[0:7]
+    SendByteToFlash(0x00);   // fast read dummy byte
+
+    for(i=0; i<4; i++)
+    {
+        for(counter=0x0000;counter<0x8000;counter++)  // 32K
+        {
+            Dat=ReadByteFromFlash();
+            if(Dat!=0xFF) //verify Byte is all 0xFF, otherwise  error
+            {
+                WaitFlashFree();
+                Print(L" Dat is: %d \n",Dat);
+                Print(L" Counter is: %d \n",counter);
+                Print(L" Block is: %d \n",i);
+                Print(L" -- Verify Fail. \n");
+                return(FALSE);
+            }
+            if(0 == counter%0x800)
+                Print(L"#");
+        }
+    }
+    
+    WaitFlashFree();
+    Print(L"   -- Verify OK. \n\n");
+    return(TRUE);
 }
 
 // If SPI flash support chip erase command
@@ -710,7 +711,8 @@ void ITE_eFlash_Program(void)
     SendByteToFlash(str1[1]);
     WaitFlashFree();
     
-    for(i=2; i<0x8000; i+=2)
+    Print(L"#");
+    for(i=2; i<0x8000; i+=2) // First tow byte already to to flash
     {
         FollowMode(_EnterFollowMode);
         SendCmdToFlash(SPICmd_AAIWordPro);
@@ -924,7 +926,7 @@ void Show_Version(void)
   printf("*************************************************************\n");
   printf("**            EC Flash Utility Version : %s               **\n",Version);
   printf("**                                                         **\n");
-  printf("**   (C)Copyright %s Telecom Technology Co.,Ltd        **\n",Vendor);
+  printf("**      (C)Copyright %s Telecom Technology Co.,Ltd     **\n",Vendor);
   printf("**                 All Rights Reserved.                    **\n");
   printf("**                                                         **\n");
   printf("**                 Modified by Morgen                      **\n");
@@ -940,13 +942,14 @@ int main(int Argc, char **Argv)
     {
         printf("=======================================================\n");
         printf("=         ITE EC Flash Utility Version : %s          =\n",Version);
-        printf("=   (C)Copyright %s Telecom Technology Co.,Ltd    =\n",Vendor);
+        printf("**      (C)Copyright %s Telecom Technology Co.,Ltd     **\n",Vendor);
         printf("=                 All Rights Reserved.                =\n");
         printf("=                             --%s           =\n", __DATE__);
         printf("=                                                     =\n");
         printf("=                                                     =\n");
         printf("=  FTEFI [/128] ... [/R] xxxx.bin                     =\n");
         printf("=   /B      Back up flash data                        =\n");
+        printf("=   /F      Update Flash                              =\n");
         printf("=   /64     Size of FW is 64K                         =\n");
         printf("=   /128    Size of FW is 128K                        =\n");
         printf("=   /R      Reset EC after update                     =\n");
@@ -958,6 +961,7 @@ int main(int Argc, char **Argv)
     BackUp=0;     // Default is not backup
     FW_Size=64;   // Default is 64K
     ResetFlag=0;  // Default is not reset
+    UpdateFlashFlag = 0;
     PM_STATUS_PORT66 =0x66;
     PM_CMD_PORT66    =0x66;
     PM_DATA_PORT62   =0x62; // Default port is 6266
@@ -971,6 +975,11 @@ int main(int Argc, char **Argv)
         if(!strcmp("/R",Argv[i]) || !strcmp("/r",Argv[i]))
         {
             ResetFlag=1;  // Flag reset ec after update
+        }
+        
+        if(!strcmp("/F",Argv[i]) || !strcmp("/f",Argv[i]))
+        {
+            UpdateFlashFlag=1;  // Need Update Flash
         }
         
         if(!strcmp("/64",Argv[i]))
@@ -1027,6 +1036,12 @@ int main(int Argc, char **Argv)
     if(BackUp)
     {
         Flash_BackUp();       // read flash(64k) data to back
+    }
+    
+    // Don't Update Flash
+    if(0==UpdateFlashFlag)
+    {
+        goto end;
     }
 
     // ITE e-flash
