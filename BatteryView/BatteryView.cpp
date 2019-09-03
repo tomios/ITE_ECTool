@@ -1,4 +1,10 @@
-#define  TOOLS_VER   "V2.0"
+#define  TOOLS_VER   "V2.1"
+//*****************************************
+// BatteryTool Version : 2.0
+//*****************************************
+// 1. Add some charger data polling
+
+
 //*****************************************
 // BatteryTool Version : 2.0
 //*****************************************
@@ -543,6 +549,9 @@ typedef enum InfoNameEnum
     CHARGE_OP1,
     CHARGE_OP2,
     CHARGE_OP3,
+    CHARGE_OP4,
+    CHARGE_OP5,
+    CHARGE_OP6,
     PROHOT_OP0,
     PROHOT_OP1,
     MinSysVoltage,
@@ -627,6 +636,9 @@ EC_BatteryInfo BAT1_Info[] =
     {"CHARGE_OP1          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"CHARGE_OP2          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"CHARGE_OP3          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
+    {"CHARGE_OP4          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
+    {"CHARGE_OP5          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
+    {"CHARGE_OP6          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"PROHOT_OP0          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"PROHOT_OP1          :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
     {"MinSysVoltage       :", "N/A", "N/A", 0, 0, 0, FALSE, FALSE},
@@ -953,7 +965,7 @@ void InitBatteryInfo(void)
     {
         tmpvalue = EC_RAM_READ(BAT1_Info[BAT_SerialNum].InfoAddr_H)<<8
                 | EC_RAM_READ(BAT1_Info[BAT_SerialNum].InfoAddr_L);
-        BAT1_Info[BAT_ManuDate].InfoInt = tmpvalue;
+        BAT1_Info[BAT_SerialNum].InfoInt = tmpvalue;
         
         sprintf(BAT1_Info[BAT_SerialNum].InfoValue, "%-d [%04X]", tmpvalue, tmpvalue);
     }
@@ -1138,6 +1150,30 @@ void PollBatteryInfo(void)
         BAT1_Info[CHARGE_OP3].InfoInt = tmpvalue;
         sprintf(BAT1_Info[CHARGE_OP3].InfoValue, "%-#08X",
         BAT1_Info[CHARGE_OP3].InfoInt);
+    }
+    if(BAT1_Info[CHARGE_OP4].Active)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[CHARGE_OP4].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[CHARGE_OP4].InfoAddr_L);
+        BAT1_Info[CHARGE_OP4].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[CHARGE_OP4].InfoValue, "%-#08X",
+        BAT1_Info[CHARGE_OP4].InfoInt);
+    }
+    if(BAT1_Info[CHARGE_OP5].Active)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[CHARGE_OP5].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[CHARGE_OP5].InfoAddr_L);
+        BAT1_Info[CHARGE_OP5].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[CHARGE_OP5].InfoValue, "%-#08X",
+        BAT1_Info[CHARGE_OP5].InfoInt);
+    }
+    if(BAT1_Info[CHARGE_OP6].Active)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[CHARGE_OP6].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[CHARGE_OP6].InfoAddr_L);
+        BAT1_Info[CHARGE_OP6].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[CHARGE_OP6].InfoValue, "%-#08X",
+        BAT1_Info[CHARGE_OP6].InfoInt);
     }
     if(BAT1_Info[PROHOT_OP0].Active)
     {
