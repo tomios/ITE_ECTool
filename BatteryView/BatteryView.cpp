@@ -42,7 +42,7 @@ typedef unsigned int    UINT32;
 #define  CopyRight      "(C)Copyright 2005-2020 ZXQ Telecom."
 #define  TOOL_DEBUG     0
 #define  ESC            0x1B
-#define  TOOLS_VER      "V3.0"
+#define  TOOLS_VER      "V3.1"
 
 //==========================The hardware port to read/write function================================
 #define READ_PORT(port,data2)  GetPortVal(port, &data2, 1);
