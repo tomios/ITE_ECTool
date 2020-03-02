@@ -692,6 +692,8 @@ void Polling_Battery_Dynamic_Data(void)
     }
     if(0x01&BAT1_Info[BAT_FCCFlag].LogAndDisplay)
     {
+        tmpvalue = EC_RAM_READ(BAT1_Info[BAT_FCCFlag].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[BAT_FCCFlag].InfoAddr_L);
         BAT1_Info[BAT_FCCFlag].InfoInt = (BAT1_Info[BAT_FCCFlag].InfoInt&0x0020)>>5;
         sprintf(BAT1_Info[BAT_FCCFlag].InfoValue, "%-8s", (BAT1_Info[BAT_FCCFlag].InfoInt?"Full":"Not Full"));
     }
