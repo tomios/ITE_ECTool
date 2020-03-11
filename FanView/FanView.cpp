@@ -1,8 +1,14 @@
-#define  TOOLS_VER   "V1.0"
+#define  TOOLS_VER   "V1.1"
+
+//*****************************************
+// BatteryTool Version : 1.1
+//*****************************************
+// Init IT-557x chip
 
 //*****************************************
 // BatteryTool Version : 1.0
 //*****************************************
+// First release
 
 
 /* Copyright (C)Copyright 2005-2020 ZXQ Telecom. All rights reserved.
@@ -451,7 +457,7 @@ FILE *CfgFile = NULL;
 unsigned int SetTime;
 
 typedef struct BatteryInfoStruct
-    
+{
     char InfoName[128];
     char CfgItemName[128];    // Read cfg file item name
     char InfoValue[128];      // All info converted to character
@@ -656,6 +662,24 @@ void ReadCfgFile(void)
 void ToolInit(void)
 {
     int i,j;
+    unsigned char EC_CHIP_ID1;
+    unsigned char EC_CHIP_ID2;
+    unsigned char EC_CHIP_Ver;
+    
+    // ITE IT-557x chip is DLM architecture for EC  RAM and It's support 6K/8K RAM.
+    // If used RAM less  than 4K, you can access EC RAM form 0x000--0xFFF by 4E/4F IO port
+    // If used RAM more than 4K, RAM address change to 0xC000
+    // If you want to access EC RAM by 4E/4F IO port, you must set as follow register first
+    // REG_1060[BIT7]
+    EC_CHIP_ID1 = EC_RAM_READ(0x2000);
+    EC_CHIP_ID2 = EC_RAM_READ(0x2001);
+    if(0x55==EC_CHIP_ID1)
+    {
+        EC_CHIP_Ver = EC_RAM_READ(0x1060);
+        EC_CHIP_Ver = EC_CHIP_Ver | 0x80;
+        EC_RAM_WRITE(0x1060, EC_CHIP_Ver);
+    }
+    
     SetConsoleTitle(TOOLS_NAME);
     system("mode con cols=95 lines=60");
     
