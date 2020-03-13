@@ -42,7 +42,7 @@ typedef unsigned int    UINT32;
 #define  CopyRight      "(C)Copyright 2005-2020 ZXQ Telecom."
 #define  TOOL_DEBUG     0
 #define  ESC            0x1B
-#define  TOOLS_VER      "V3.1"
+#define  TOOLS_VER      "V3.2"
 
 //==========================The hardware port to read/write function================================
 #define READ_PORT(port,data2)  GetPortVal(port, &data2, 1);
@@ -692,9 +692,7 @@ void Polling_Battery_Dynamic_Data(void)
     }
     if(0x01&BAT1_Info[BAT_FCCFlag].LogAndDisplay)
     {
-        tmpvalue = EC_RAM_READ(BAT1_Info[BAT_FCCFlag].InfoAddr_H)<<8
-                | EC_RAM_READ(BAT1_Info[BAT_FCCFlag].InfoAddr_L);
-        BAT1_Info[BAT_FCCFlag].InfoInt = (BAT1_Info[BAT_FCCFlag].InfoInt&0x0020)>>5;
+        BAT1_Info[BAT_FCCFlag].InfoInt = EC_RAM_READ(BAT1_Info[BAT_FCCFlag].InfoAddr_L)&0x20;
         sprintf(BAT1_Info[BAT_FCCFlag].InfoValue, "%-8s", (BAT1_Info[BAT_FCCFlag].InfoInt?"Full":"Not Full"));
     }
     if(0x01&BAT1_Info[BAT_Current].LogAndDisplay)
