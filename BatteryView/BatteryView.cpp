@@ -248,11 +248,14 @@ typedef enum InfoNameEnum
     INPUT_Current,
     
     Adapter_WATT,
-    USB_C_PDO_WATT,
-    USB_C_PDO_C,
-    USB_C_PDO_V,
-    USB_C_Status,
-    USB_C_Status2,
+    PORT_A_WATT,
+    PORT_A_PDO_C,
+    PORT_A_PDO_V,
+    PORT_B_WATT,
+    PORT_B_PDO_C,
+    PORT_B_PDO_V,
+    PORT_A_Status,
+    PORT_B_Status,
     
     BAT_ManuName,
     BAT_DeviceName,
@@ -344,11 +347,14 @@ EC_BatteryInfo BAT1_Info[] =
     {"INPUT_Current       :", "N/A", "N/A", 0, 0, 0, FALSE},
     
     {"Adapter_watt        :", "N/A", "N/A", 0, 0, 0, FALSE},
-    {"USB_C_Watt          :", "N/A", "N/A", 0, 0, 0, FALSE},
-    {"USB_C_PDO_C         :", "N/A", "N/A", 0, 0, 0, FALSE},
-    {"USB_C_PDO_V         :", "N/A", "N/A", 0, 0, 0, FALSE},
-    {"USB_C_Status        :", "N/A", "N/A", 0, 0, 0, FALSE},
-    {"USB_C_Status2       :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_A_WATT         :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_A_PDO_C        :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_A_PDO_V        :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_B_WATT         :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_B_PDO_C        :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_B_PDO_V        :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_A_Status       :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PORT_B_Status       :", "N/A", "N/A", 0, 0, 0, FALSE},
 
     {"BAT_ManuName        :", "N/A", "N/A", 0, 0, 0, FALSE},
     {"BAT_DeviceName      :", "N/A", "N/A", 0, 0, 0, FALSE},
@@ -1076,73 +1082,88 @@ void Polling_Battery_Dynamic_Data(void)
         BAT1_Info[Adapter_WATT].InfoInt = tmpvalue;
         sprintf(BAT1_Info[Adapter_WATT].InfoValue, "%-8d W",BAT1_Info[Adapter_WATT].InfoInt);
     }
-    if(0x01&BAT1_Info[USB_C_PDO_WATT].LogAndDisplay)
+    if(0x01&BAT1_Info[PORT_A_WATT].LogAndDisplay)
     {
-        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_PDO_WATT].InfoAddr_L);
-        BAT1_Info[USB_C_PDO_WATT].InfoInt = tmpvalue;
-        sprintf(BAT1_Info[USB_C_PDO_WATT].InfoValue, "%-8d W",BAT1_Info[USB_C_PDO_WATT].InfoInt);
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_A_WATT].InfoAddr_L);
+        BAT1_Info[PORT_A_WATT].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[PORT_A_WATT].InfoValue, "%-8d W",BAT1_Info[PORT_A_WATT].InfoInt);
     }
-    if(0x01&BAT1_Info[USB_C_PDO_C].LogAndDisplay)
+    if(0x01&BAT1_Info[PORT_A_PDO_C].LogAndDisplay)
     {
-        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_PDO_C].InfoAddr_H)<<8
-                | EC_RAM_READ(BAT1_Info[USB_C_PDO_C].InfoAddr_L);
-        BAT1_Info[USB_C_PDO_C].InfoInt = tmpvalue/10;
-        sprintf(BAT1_Info[USB_C_PDO_C].InfoValue, "%-8d A",BAT1_Info[USB_C_PDO_C].InfoInt);
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_A_PDO_C].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[PORT_A_PDO_C].InfoAddr_L);
+        BAT1_Info[PORT_A_PDO_C].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[PORT_A_PDO_C].InfoValue, "%-8d mA",BAT1_Info[PORT_A_PDO_C].InfoInt);
     }
-    if(0x01&BAT1_Info[USB_C_PDO_V].LogAndDisplay)
+    if(0x01&BAT1_Info[PORT_A_PDO_V].LogAndDisplay)
     {
-        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_PDO_V].InfoAddr_H)<<8
-                | EC_RAM_READ(BAT1_Info[USB_C_PDO_V].InfoAddr_L);
-        BAT1_Info[USB_C_PDO_V].InfoInt = tmpvalue/10;
-        sprintf(BAT1_Info[USB_C_PDO_V].InfoValue, "%-8d V",BAT1_Info[USB_C_PDO_V].InfoInt);
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_A_PDO_V].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[PORT_A_PDO_V].InfoAddr_L);
+        BAT1_Info[PORT_A_PDO_V].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[PORT_A_PDO_V].InfoValue, "%-8d mV",BAT1_Info[PORT_A_PDO_V].InfoInt);
     }
-    if(0x01&BAT1_Info[USB_C_Status].LogAndDisplay)
+    if(0x01&BAT1_Info[PORT_B_WATT].LogAndDisplay)
     {
-        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_Status].InfoAddr_L);
-        BAT1_Info[USB_C_Status].InfoInt = tmpvalue;
-        //sprintf(BAT1_Info[USB_C_Status].InfoValue, "%-#08X",BAT1_Info[USB_C_Status].InfoInt);
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_B_WATT].InfoAddr_L);
+        BAT1_Info[PORT_B_WATT].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[PORT_B_WATT].InfoValue, "%-8d W",BAT1_Info[PORT_B_WATT].InfoInt);
+    }
+    if(0x01&BAT1_Info[PORT_B_PDO_C].LogAndDisplay)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_B_PDO_C].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[PORT_B_PDO_C].InfoAddr_L);
+        BAT1_Info[PORT_B_PDO_C].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[PORT_B_PDO_C].InfoValue, "%-8d mA",BAT1_Info[PORT_B_PDO_C].InfoInt);
+    }
+    if(0x01&BAT1_Info[PORT_B_PDO_V].LogAndDisplay)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_B_PDO_V].InfoAddr_H)<<8
+                | EC_RAM_READ(BAT1_Info[PORT_B_PDO_V].InfoAddr_L);
+        BAT1_Info[PORT_B_PDO_V].InfoInt = tmpvalue;
+        sprintf(BAT1_Info[PORT_B_PDO_V].InfoValue, "%-8d mV",BAT1_Info[PORT_B_PDO_V].InfoInt);
+    }
+    if(0x01&BAT1_Info[PORT_A_Status].LogAndDisplay)
+    {
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_A_Status].InfoAddr_L);
+        BAT1_Info[PORT_A_Status].InfoInt = tmpvalue;
+        //sprintf(BAT1_Info[PORT_A_Status].InfoValue, "%-#08X",BAT1_Info[PORT_A_Status].InfoInt);
         if(tmpvalue&0x01)
         {
-            sprintf(BAT1_Info[USB_C_Status].InfoValue, "[%-s][%-s][%-s][%-s][%-s][%-s]",
+            sprintf(BAT1_Info[PORT_A_Status].InfoValue, "[%-s][%-s][%-s][%-s]",
                                     (tmpvalue&0x01)?"Connect   ":"Connect   ",
-                                    (tmpvalue&0x02)?"cc1":((tmpvalue&0x04)?"cc2":"   "),
-                                    (tmpvalue&0x08)?"DFP":"UFP",
-                                    (tmpvalue&0x10)?"Source":"Sink  ",
-                                    (tmpvalue&0x20)?"Watt_Low":"Watt_Hi ",
-                                    (tmpvalue&0x40)?"PDO_OK":"      "
-                                    );
+                                    (tmpvalue&0x02)?"cc1":"cc2",
+                                    (tmpvalue&0x04)?"Source":"Sink  ",
+                                    (tmpvalue&0x08)?"DFP":"UFP");
         }
         else
         {
-            sprintf(BAT1_Info[USB_C_Status].InfoValue, "[%-s][%-s][%-s][%-s][%-s][%-s]",
+            sprintf(BAT1_Info[PORT_A_Status].InfoValue, "[%-s][%-s][%-s][%-s]",
                                     "Disconnect",
                                     "   ",
-                                    "   ",
                                     "      ",
-                                    "        ",
-                                    "      "
-                                    );
+                                    "   ");
         }
     }
-    if(0x01&BAT1_Info[USB_C_Status2].LogAndDisplay)
+    if(0x01&BAT1_Info[PORT_B_Status].LogAndDisplay)
     {
-        tmpvalue = EC_RAM_READ(BAT1_Info[USB_C_Status2].InfoAddr_L);
-        BAT1_Info[USB_C_Status2].InfoInt = tmpvalue;
+        tmpvalue = EC_RAM_READ(BAT1_Info[PORT_B_Status].InfoAddr_L);
+        BAT1_Info[PORT_B_Status].InfoInt = tmpvalue;
+        //sprintf(BAT1_Info[PORT_B_Status].InfoValue, "%-#08X",BAT1_Info[PORT_B_Status].InfoInt);
         if(tmpvalue&0x01)
         {
-            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "DC_ADP   ");
-        }
-        else if(tmpvalue&0x02)
-        {
-            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "PD_ADP   ");
-        }
-        else if(tmpvalue&0x04)
-        {
-            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "TYPEC_ADP");
+            sprintf(BAT1_Info[PORT_B_Status].InfoValue, "[%-s][%-s][%-s][%-s]",
+                                    (tmpvalue&0x01)?"Connect   ":"Connect   ",
+                                    (tmpvalue&0x02)?"cc1":"cc2",
+                                    (tmpvalue&0x04)?"Source":"Sink  ",
+                                    (tmpvalue&0x08)?"DFP":"UFP");
         }
         else
         {
-            sprintf(BAT1_Info[USB_C_Status2].InfoValue, "[%-s]", "         ");
+            sprintf(BAT1_Info[PORT_B_Status].InfoValue, "[%-s][%-s][%-s][%-s]",
+                                    "Disconnect",
+                                    "   ",
+                                    "      ",
+                                    "   ");
         }
     }
     if(0x01&BAT1_Info[Dec_Data_1].LogAndDisplay)
