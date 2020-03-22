@@ -248,6 +248,7 @@ typedef enum InfoNameEnum
     INPUT_Current,
     
     Adapter_WATT,
+    PD_FW_Ver,
     PORT_A_WATT,
     PORT_A_PDO_C,
     PORT_A_PDO_V,
@@ -347,6 +348,7 @@ EC_BatteryInfo BAT1_Info[] =
     {"INPUT_Current       :", "N/A", "N/A", 0, 0, 0, FALSE},
     
     {"Adapter_watt        :", "N/A", "N/A", 0, 0, 0, FALSE},
+    {"PD_FW_Ver           :", "N/A", "N/A", 0, 0, 0, FALSE},
     {"PORT_A_WATT         :", "N/A", "N/A", 0, 0, 0, FALSE},
     {"PORT_A_PDO_C        :", "N/A", "N/A", 0, 0, 0, FALSE},
     {"PORT_A_PDO_V        :", "N/A", "N/A", 0, 0, 0, FALSE},
@@ -578,6 +580,14 @@ void Polling_Battery_Static_Data(void)
                 EC_RAM_READ(BAT1_Info[EC_Version].InfoAddr_H),
                 EC_RAM_READ(BAT1_Info[EC_Version].InfoAddr_H+1),
                 EC_RAM_READ(BAT1_Info[EC_Version].InfoAddr_H+2));  // The EC version is 4Byte
+    }
+    if(0x01&BAT1_Info[PD_FW_Ver].LogAndDisplay)
+    {
+        sprintf(BAT1_Info[PD_FW_Ver].InfoValue, "%02X.%02X.%02X.%02X",
+                EC_RAM_READ(BAT1_Info[PD_FW_Ver].InfoAddr_H+2),
+                EC_RAM_READ(BAT1_Info[PD_FW_Ver].InfoAddr_H+1),
+                EC_RAM_READ(BAT1_Info[PD_FW_Ver].InfoAddr_H),
+                EC_RAM_READ(BAT1_Info[PD_FW_Ver].InfoAddr_L));  // The PD FW version is 4Byte
     }
     if(0x01&BAT1_Info[BAT_Mode].LogAndDisplay)
     {
